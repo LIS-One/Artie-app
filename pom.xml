@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Цепочка наследования: spring-boot-starter-parent -> наш arty-parent -> модули.
+         Это даёт нам управление версиями всех Spring-зависимостей бесплатно. -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.0.6</version>
+        <relativePath/> <!-- пусто = искать в Maven Central, не на диске -->
+    </parent>
+
+    <!-- Координаты нашего родителя. Дочерние модули наследуют groupId и version. -->
+    <groupId>com.arty</groupId>
+    <artifactId>arty-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging> <!-- ВАЖНО: pom, не jar. У этого проекта нет кода, он агрегатор. -->
+    <name>Arty Parent</name>
+    <description>Parent project for Arty microservices</description>
+
+    <!-- Список дочерних модулей. По мере роста добавишь сюда auth-service, analyze-service и т.д. -->
+    <modules>
+        <module>roadmap-service</module>
+
+    </modules>
+
+    <!-- Общие свойства, доступные во всех дочерних pom через ${имя}. -->
+    <properties>
+        <java.version>17</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- Версии библиотек, которыми не управляет Spring Boot. -->
+        <modelmapper.version>3.2.0</modelmapper.version>
+    </properties>
+
+    <!-- dependencyManagement объявляет версии, но НЕ подключает зависимости автоматически.
+         Каждый дочерний модуль сам решает, нужна ли ему конкретная библиотека,
+         но при подключении уже не пишет версию - она берётся отсюда. -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.modelmapper</groupId>
+                <artifactId>modelmapper</artifactId>
+                <version>${modelmapper.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
