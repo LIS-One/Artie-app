@@ -1,7 +1,6 @@
 package com.arty.roadmapservice.service.activity;
 
-import com.arty.roadmapservice.dto.constants.enums.LogMode;
-import com.arty.roadmapservice.dto.constants.enums.LogStatus;
+
 import com.arty.roadmapservice.dto.request.activity.ActivityCreateDto;
 import com.arty.roadmapservice.dto.request.activity.ActivityUpdateDto;
 import com.arty.roadmapservice.dto.response.activity.ActivityResponseDto;

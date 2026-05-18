@@ -21,7 +21,7 @@ public class Milestone {
     private String milestoneName;
     private String milestoneDescription;
     private LocalDateTime milestoneCreation;
-    @Column(nullable = true)
+    //Optional
     private LocalDateTime milestoneEndDate;
     @ManyToOne
     @JoinColumn(name = "attached_to_roadmap_id")

@@ -1,6 +1,6 @@
 package com.arty.roadmapservice.dto.request.roadmap;
 
-import jakarta.persistence.Column;
+
 import lombok.Getter;
 import lombok.Setter;
 

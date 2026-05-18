@@ -23,7 +23,7 @@ public class Roadmap {
     private String roadmapDescription;
     @CreationTimestamp
     private LocalDateTime creationDate;
-    @Column(nullable = true)
+    //Optional
     private LocalDateTime expirationDate;
     @OneToMany(mappedBy = "attachedToRoadmap", cascade = CascadeType.ALL)
     private List<Milestone> milestoneList;
