@@ -1,33 +1,53 @@
 package com.arty.roadmapservice.controller.activity;
 
-import com.arty.roadmapservice.dto.constants.ApiPaths;
+import com.arty.roadmapservice.dto.constants.apipaths.ApiPaths;
 import com.arty.roadmapservice.dto.request.activity.ActivityCreateDto;
 import com.arty.roadmapservice.dto.request.activity.ActivityUpdateDto;
 import com.arty.roadmapservice.dto.response.activity.ActivityResponseDto;
 import com.arty.roadmapservice.service.activity.ActivityLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import static com.arty.roadmapservice.dto.constants.apipaths.ApiPaths.BY_ID;
+
 //TODO make all mappings paths with variables inside in ALL CONTROLLERS
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(ApiPaths.PATH_ACTIVITY_LOG_BASE)
+@RequestMapping(ApiPaths.ACTIVITY)
 public class ActivityLogController {
+
+
+
     private final ActivityLogService activityLogService;
 
     @PostMapping
     public ActivityResponseDto createActivityLog(@RequestBody ActivityCreateDto activity) {
         return activityLogService.createActivityLog(activity);
     }
-    @GetMapping
-    public ActivityResponseDto getActivityLog(@PathVariable Long id){
+
+    @GetMapping(BY_ID)
+    public ActivityResponseDto getActivityLog(@PathVariable Long id) {
         return activityLogService.getActivityLog(id);
     }
-    @PostMapping
-    public ActivityResponseDto updateActivityLog(@PathVariable Long id, @RequestBody ActivityUpdateDto activity){
-        return activityLogService.updateActivityLog(id,activity);
+
+
+    @PutMapping(BY_ID)
+    public ActivityResponseDto updateActivityLog(@PathVariable Long id, @RequestBody ActivityUpdateDto activity) {
+        return activityLogService.updateActivityLog(id, activity);
     }
-    @DeleteMapping
-    public boolean deleteActivityLog(@PathVariable Long id){
+
+    @DeleteMapping(BY_ID)
+    public boolean deleteActivityLog(@PathVariable Long id) {
         return activityLogService.deleteActivity(id);
     }
+
+    @PostMapping("/api/activity-logs/timer/start")
+    public ActivityResponseDto startActivityLog(@RequestBody String name) {
+        return activityLogService.startActivityLog(name);
+    }
+    @PatchMapping("/api/activity-logs/timer/stop/{id}")
+    public ActivityResponseDto stopActivityLog(@PathVariable Long id) {
+        return activityLogService.stopActivityLog(id);
+    }
 }
+

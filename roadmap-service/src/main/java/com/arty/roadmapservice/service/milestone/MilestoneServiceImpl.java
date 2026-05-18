@@ -2,12 +2,14 @@ package com.arty.roadmapservice.service.milestone;
 
 import com.arty.roadmapservice.dto.request.milestone.MilestoneCreateDto;
 import com.arty.roadmapservice.dto.request.milestone.MilestoneUpdateDto;
-import common.response.milestone.MilestoneResponseDto;
+import com.arty.roadmapservice.dto.response.milestone.MilestoneResponseDto;
 import com.arty.roadmapservice.entity.Milestone;
 import com.arty.roadmapservice.repository.MilestoneRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -17,6 +19,7 @@ public class MilestoneServiceImpl implements MilestoneService{
     private final MilestoneRepository milestoneRepository;
     private final ModelMapper modelMapper;
 
+    @Transactional
     @Override
     public MilestoneResponseDto createMilestone(MilestoneCreateDto milestoneCreateDto) {
         Milestone milestone = modelMapper.map(milestoneCreateDto,Milestone.class);
@@ -24,12 +27,14 @@ public class MilestoneServiceImpl implements MilestoneService{
         return modelMapper.map(milestone,MilestoneResponseDto.class);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public MilestoneResponseDto getMilestone(Long id) {
         Optional<Milestone> milestone = milestoneRepository.findById(id);
         return milestone.map(m->modelMapper.map(m,MilestoneResponseDto.class)).orElse(null);
     }
 
+    @Transactional
     @Override
     public MilestoneResponseDto updateMilestone(Long id, MilestoneUpdateDto milestoneUpdateDto) {
         Optional<Milestone> milestone = milestoneRepository.findById(id);
@@ -41,6 +46,7 @@ public class MilestoneServiceImpl implements MilestoneService{
         }).orElse(null);
     }
 
+    @Transactional
     @Override
     public Boolean deleteMilestone(Long id) {
         Optional<Milestone> milestone = milestoneRepository.findById(id);

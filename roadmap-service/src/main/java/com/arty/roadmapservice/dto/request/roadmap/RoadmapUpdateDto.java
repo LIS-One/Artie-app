@@ -1,6 +1,5 @@
 package com.arty.roadmapservice.dto.request.roadmap;
 
-import com.arty.roadmapservice.dto.constants.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
 

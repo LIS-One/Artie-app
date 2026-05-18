@@ -1,6 +1,5 @@
 package com.arty.roadmapservice.entity;
 
-import com.arty.roadmapservice.dto.constants.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +23,7 @@ public class Roadmap {
     private String roadmapDescription;
     @CreationTimestamp
     private LocalDateTime creationDate;
+    @Column(nullable = true)
     private LocalDateTime expirationDate;
     @OneToMany(mappedBy = "attachedToRoadmap", cascade = CascadeType.ALL)
     private List<Milestone> milestoneList;

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import com.arty.roadmapservice.dto.constants.enums.Status;
 
 @Getter
 @Setter
@@ -16,5 +15,5 @@ public class MilestoneResponseDto {
     private LocalDateTime milestoneCreation;
     private LocalDateTime milestoneEndDate;
     private Long attachedToRoadmapId;
-    private Status finished;
+    private boolean finished;
 }

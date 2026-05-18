@@ -14,4 +14,8 @@ public interface ActivityLogService {
 
     Boolean deleteActivity(Long activityLogId);
 
+    ActivityResponseDto startActivityLog(String name);
+
+    ActivityResponseDto stopActivityLog(Long id);
+
 }

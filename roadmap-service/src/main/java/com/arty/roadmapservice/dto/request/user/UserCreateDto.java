@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 public class UserCreateDto {
     private String firstName;
     private String lastName;
-    private String email;
     private LocalDateTime birthDate;
     
 

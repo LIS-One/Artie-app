@@ -1,6 +1,5 @@
 package com.arty.roadmapservice.entity;
 
-import com.arty.roadmapservice.dto.constants.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +21,7 @@ public class Milestone {
     private String milestoneName;
     private String milestoneDescription;
     private LocalDateTime milestoneCreation;
+    @Column(nullable = true)
     private LocalDateTime milestoneEndDate;
     @ManyToOne
     @JoinColumn(name = "attached_to_roadmap_id")

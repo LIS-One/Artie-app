@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 @Setter
 public class ActivityUpdateDto {
     private String activityName;
+    private LocalDateTime activityCreated;
     private LocalDateTime activityUpdated;
-    private int activityTime;
+    private LocalDateTime activityEnded;
+
 }

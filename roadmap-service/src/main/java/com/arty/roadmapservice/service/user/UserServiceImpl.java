@@ -5,6 +5,7 @@ import com.arty.roadmapservice.dto.request.user.UserUpdateDto;
 import com.arty.roadmapservice.dto.response.user.UserResponseDto;
 import com.arty.roadmapservice.entity.User;
 import com.arty.roadmapservice.repository.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
+    @Transactional
     @Override
     public UserResponseDto createUser(UserCreateDto userCreateDto) {
         User user = modelMapper.map(userCreateDto,User.class);
@@ -24,6 +26,7 @@ public class UserServiceImpl implements UserService{
         return modelMapper.map(user, UserResponseDto.class);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public UserResponseDto getUser(Long userId) {
         Optional<User> user = userRepository.findById(userId);
@@ -31,6 +34,7 @@ public class UserServiceImpl implements UserService{
         return user.map(value -> modelMapper.map(value, UserResponseDto.class)).orElse(null);
     }
 
+    @Transactional
     @Override
     public UserResponseDto updateUser(Long id, UserUpdateDto userUpdateDto) {
         Optional<User> user = userRepository.findById(id);
@@ -44,6 +48,7 @@ public class UserServiceImpl implements UserService{
         return null;
     }
 
+    @Transactional
     @Override
     public Boolean deleteUser(Long userId) {
         Optional<User> user = userRepository.findById(userId);

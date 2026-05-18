@@ -10,7 +10,7 @@ public class ActivityCreateDto {
     private String activityName;
     private LocalDateTime activityCreated;
     private LocalDateTime activityUpdated;
-    private int activityTime;
+    private LocalDateTime activityEnded;
     private Long attachedToRoadmapId;
     private Long attachedToMilestoneId;
 }
