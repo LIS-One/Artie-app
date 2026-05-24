@@ -12,4 +12,6 @@ public interface RoadmapService {
     RoadmapResponseDto updateRoadmap(Long id, RoadmapUpdateDto roadmapUpdateDto);
 
     Boolean deleteRoadmap(Long id);
+
+    RoadmapResponseDto completeRoadmap(Long id);
 }

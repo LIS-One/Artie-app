@@ -12,4 +12,6 @@ public interface MilestoneService {
     MilestoneResponseDto updateMilestone(Long id,MilestoneUpdateDto milestoneUpdateDto);
 
     Boolean deleteMilestone(Long id);
+
+    MilestoneResponseDto completeMilestone(Long id);
 }

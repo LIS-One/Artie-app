@@ -1,13 +1,13 @@
 package com.arty.roadmapservice.entity;
 
+import com.arty.roadmapservice.dto.constants.enums.RoadMilestoneStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -16,23 +16,32 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Roadmap {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String roadmapName;
-    private String roadmapDescription;
+    private String name;
+    private String description;
     @CreationTimestamp
     private LocalDateTime creationDate;
-    //Optional
     private LocalDateTime expirationDate;
-    @OneToMany(mappedBy = "attachedToRoadmap", cascade = CascadeType.ALL)
-    private List<Milestone> milestoneList;
-    @OneToMany(mappedBy = "attachedToRoadmap", cascade = CascadeType.ALL)
-    private List<ActivityLog> logsList;
+    private LocalDateTime endDate;
+
+    @OneToMany(mappedBy = "roadmap", cascade = CascadeType.ALL)
+    private List<Milestone> milestones = new ArrayList<>();
+
+    @OneToMany(mappedBy = "roadmap", cascade = CascadeType.ALL)
+    private List<ActivityLog> logs = new ArrayList<>();
+
     @ManyToOne
-    @JoinColumn(name="user_id",nullable = false)
-    private User user;
-    @Enumerated(EnumType.STRING)
-    private boolean finishedStatus;
+    @JoinColumn(name = "user_profile_id", nullable = false)
+    private UserProfile userProfile;
+
+    private RoadMilestoneStatus status = RoadMilestoneStatus.IN_PROGRESS;
+
+
+    public void markCompleted() {
+        if(status.equals(RoadMilestoneStatus.COMPLETED)) {
+            this.endDate = LocalDateTime.now();
+        }
+    }
 
 }

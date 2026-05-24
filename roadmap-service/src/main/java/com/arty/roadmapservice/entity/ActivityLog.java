@@ -19,15 +19,15 @@ public class ActivityLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String activityName;
-    private LocalDateTime activityCreated;
-    private LocalDateTime activityUpdated;
-    private LocalDateTime activityEnded;
+    private String name;
+    private LocalDateTime created;
+    private LocalDateTime updated;
+    private LocalDateTime ended;
     @ManyToOne
-    @JoinColumn(name = "attached_to_roadmap_id")
-    private Roadmap attachedToRoadmap;
+    @JoinColumn(name = "roadmap")
+    private Roadmap roadmap;
     @ManyToOne
-    private Milestone attachedToMilestone;
+    private Milestone milestone;
     private LogStatus logStatus;
     private LogMode logMode;
 }

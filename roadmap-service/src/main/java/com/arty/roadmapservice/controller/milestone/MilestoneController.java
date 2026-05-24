@@ -30,4 +30,9 @@ public class MilestoneController {
         return milestoneService.deleteMilestone(id);
     }
 
+    @PatchMapping(ApiPaths.BY_ID)
+    public MilestoneResponseDto completeMilestone(@PathVariable Long id){
+        return milestoneService.completeMilestone(id);
+    }
+
 }

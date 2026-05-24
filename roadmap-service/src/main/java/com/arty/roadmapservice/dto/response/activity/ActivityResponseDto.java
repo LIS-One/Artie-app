@@ -1,6 +1,8 @@
 package com.arty.roadmapservice.dto.response.activity;
 
 
+import com.arty.roadmapservice.dto.constants.enums.LogMode;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,10 +12,11 @@ import java.time.LocalDateTime;
 @Setter
 public class ActivityResponseDto {
     private Long id;
-    private String activityName;
-    private LocalDateTime activityCreated;
-    private LocalDateTime activityUpdated;
-    private int activityTime;
-    private Long attachedToRoadmapId;
-    private Long attachedToMilestoneId;
+    private String name;
+    private LocalDateTime created;
+    private LocalDateTime updated;
+    private LocalDateTime endTime;
+    private Long roadmapId;
+    private Long milestoneId;
+    private LogMode logMode;
 }

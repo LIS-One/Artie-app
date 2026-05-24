@@ -30,4 +30,8 @@ public class RoadmapController {
     public Boolean deleteRoadmap(@PathVariable Long id){
         return roadmapService.deleteRoadmap(id);
     }
+    @PatchMapping(ApiPaths.BY_ID)
+    public RoadmapResponseDto completeRoadmap(@PathVariable Long id){
+        return roadmapService.completeRoadmap(id);
+    }
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,14 +16,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class User {
+public class UserProfile {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
     private String lastName;
     private String email;
 //    private String password;
-    private LocalDateTime birthDate;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private LocalDate birthDate;
+    @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL)
     private List<Roadmap> roadmaps;
 }

@@ -1,11 +1,14 @@
 package com.arty.roadmapservice.service.milestone;
 
+import com.arty.roadmapservice.dto.constants.enums.RoadMilestoneStatus;
 import com.arty.roadmapservice.dto.request.milestone.MilestoneCreateDto;
 import com.arty.roadmapservice.dto.request.milestone.MilestoneUpdateDto;
 import com.arty.roadmapservice.dto.response.milestone.MilestoneResponseDto;
 import com.arty.roadmapservice.entity.Milestone;
 import com.arty.roadmapservice.repository.MilestoneRepository;
 
+import com.arty.roadmapservice.repository.RoadmapRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -18,33 +21,36 @@ import java.util.Optional;
 public class MilestoneServiceImpl implements MilestoneService{
     private final MilestoneRepository milestoneRepository;
     private final ModelMapper modelMapper;
+    private final RoadmapRepository roadmapRepository;
 
     @Transactional
     @Override
     public MilestoneResponseDto createMilestone(MilestoneCreateDto milestoneCreateDto) {
-        Milestone milestone = modelMapper.map(milestoneCreateDto,Milestone.class);
+        Milestone milestone = modelMapper.map(milestoneCreateDto, Milestone.class);
+        milestone.setRoadmap(roadmapRepository.findById(milestoneCreateDto.getRoadmapId())
+                .orElseThrow(EntityNotFoundException::new));
         milestoneRepository.save(milestone);
-        return modelMapper.map(milestone,MilestoneResponseDto.class);
+        return toDto(milestone);
     }
 
     @Transactional(readOnly = true)
     @Override
     public MilestoneResponseDto getMilestone(Long id) {
-        Optional<Milestone> milestone = milestoneRepository.findById(id);
-        return milestone.map(m->modelMapper.map(m,MilestoneResponseDto.class)).orElse(null);
+        return milestoneRepository.findById(id)
+                .map(this::toDto)
+                .orElse(null);
     }
 
     @Transactional
     @Override
     public MilestoneResponseDto updateMilestone(Long id, MilestoneUpdateDto milestoneUpdateDto) {
-        Optional<Milestone> milestone = milestoneRepository.findById(id);
-
-        return milestone.map(m->{
-            modelMapper.map(milestoneUpdateDto,m);
+        return milestoneRepository.findById(id).map(m -> {
+            modelMapper.map(milestoneUpdateDto, m);
             milestoneRepository.save(m);
-            return modelMapper.map(m,MilestoneResponseDto.class);
+            return toDto(m);
         }).orElse(null);
     }
+
 
     @Transactional
     @Override
@@ -52,5 +58,29 @@ public class MilestoneServiceImpl implements MilestoneService{
         Optional<Milestone> milestone = milestoneRepository.findById(id);
         milestone.ifPresent(milestoneRepository::delete);
         return !milestoneRepository.existsById(id);
+    }
+
+    @Transactional
+    @Override
+    public MilestoneResponseDto completeMilestone(Long id) {
+        Milestone milestone = milestoneRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
+        milestone.setStatus(RoadMilestoneStatus.COMPLETED);
+        milestone.markCompleted();
+        milestoneRepository.save(milestone);
+        return toDto(milestone);
+    }
+
+    private MilestoneResponseDto toDto(Milestone m) {
+        if (m == null) return null;
+        MilestoneResponseDto dto = new MilestoneResponseDto();
+        dto.setId(m.getId());
+        dto.setName(m.getName());
+        dto.setDescription(m.getDescription());
+        dto.setCreationDate(m.getCreationDate());
+        dto.setEndDate(m.getEndDate());
+        dto.setStatus(m.getStatus());
+        dto.setRoadmapId(m.getRoadmap() != null ? m.getRoadmap().getId() : null);
+        return dto;
     }
 }

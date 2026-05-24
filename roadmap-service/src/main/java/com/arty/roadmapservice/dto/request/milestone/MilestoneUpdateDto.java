@@ -9,9 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class MilestoneUpdateDto {
-    private String milestoneName;
-    private String milestoneDescription;
-    private LocalDateTime milestoneCreation;
-    private LocalDateTime milestoneEndDate;
-    private RoadMilestoneStatus status;
+    private String name;
+    private String description;
+    private LocalDateTime expirationDate;
 }

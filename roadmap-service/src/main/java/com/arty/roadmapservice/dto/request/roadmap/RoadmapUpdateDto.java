@@ -9,8 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class RoadmapUpdateDto {
-    private String roadmapName;
-    private String roadmapDescription;
+    private String name;
+    private String description;
     private LocalDateTime expirationDate;
-    private RoadMilestoneStatus status;
 }

@@ -1,11 +1,15 @@
 package com.arty.roadmapservice.dto.request.user;
 
-import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.time.LocalDate;
+@Getter
+@Setter
 public class UserCreateDto {
     private String firstName;
     private String lastName;
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
     
 
 }

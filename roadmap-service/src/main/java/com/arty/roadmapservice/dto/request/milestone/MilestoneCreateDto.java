@@ -11,9 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class MilestoneCreateDto {
-    private String milestoneName;
-    private String milestoneDescription;
-    private LocalDateTime milestoneCreation;
-    private LocalDateTime milestoneEndDate;
-    private Long attachedToRoadmapId;
+    private String name;
+    private String description;
+    private Long roadmapId;
 }

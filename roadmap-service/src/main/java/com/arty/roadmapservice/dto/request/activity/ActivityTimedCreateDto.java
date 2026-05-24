@@ -6,10 +6,8 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 @Getter
 @Setter
-public class ActivityUpdateDto {
+public class ActivityTimedCreateDto {
     private String name;
-    private LocalDateTime created;
-    private LocalDateTime updated;
-    private LocalDateTime ended;
-
+    private Long roadmapId;
+    private Long milestoneId;
 }

@@ -2,6 +2,7 @@ package com.arty.roadmapservice.controller.activity;
 
 import com.arty.roadmapservice.dto.constants.apipaths.ApiPaths;
 import com.arty.roadmapservice.dto.request.activity.ActivityCreateDto;
+import com.arty.roadmapservice.dto.request.activity.ActivityTimedCreateDto;
 import com.arty.roadmapservice.dto.request.activity.ActivityUpdateDto;
 import com.arty.roadmapservice.dto.response.activity.ActivityResponseDto;
 import com.arty.roadmapservice.service.activity.ActivityLogService;
@@ -41,11 +42,11 @@ public class ActivityLogController {
         return activityLogService.deleteActivity(id);
     }
 
-    @PostMapping("/api/activity-logs/timer/start")
-    public ActivityResponseDto startActivityLog(@RequestBody String name) {
-        return activityLogService.startActivityLog(name);
+    @PostMapping("/timer/start")
+    public ActivityResponseDto startActivityLog(@RequestBody ActivityTimedCreateDto createActivity) {
+        return activityLogService.startActivityLog(createActivity);
     }
-    @PatchMapping("/api/activity-logs/timer/stop/{id}")
+    @PatchMapping("/timer/stop/{id}")
     public ActivityResponseDto stopActivityLog(@PathVariable Long id) {
         return activityLogService.stopActivityLog(id);
     }

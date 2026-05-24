@@ -7,10 +7,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class ActivityCreateDto {
-    private String activityName;
-    private LocalDateTime activityCreated;
-    private LocalDateTime activityUpdated;
-    private LocalDateTime activityEnded;
-    private Long attachedToRoadmapId;
-    private Long attachedToMilestoneId;
+    private String name;
+    private LocalDateTime created;
+    private LocalDateTime ended;
+    private Long roadmapId;
+    private Long milestoneId;
 }
