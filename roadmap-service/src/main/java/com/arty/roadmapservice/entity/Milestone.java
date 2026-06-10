@@ -1,7 +1,7 @@
 package com.arty.roadmapservice.entity;
 
 import com.arty.roadmapservice.dto.constants.enums.RoadMilestoneStatus;
-import com.arty.roadmapservice.dto.response.milestone.MilestoneResponseDto;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

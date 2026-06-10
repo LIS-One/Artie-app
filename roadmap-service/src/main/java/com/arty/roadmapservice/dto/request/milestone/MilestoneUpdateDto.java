@@ -1,6 +1,6 @@
 package com.arty.roadmapservice.dto.request.milestone;
 
-import com.arty.roadmapservice.dto.constants.enums.RoadMilestoneStatus;
+
 import lombok.Getter;
 import lombok.Setter;
 

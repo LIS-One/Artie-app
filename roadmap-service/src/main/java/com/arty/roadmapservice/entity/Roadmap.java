@@ -4,7 +4,7 @@ import com.arty.roadmapservice.dto.constants.enums.RoadMilestoneStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.boot.context.properties.bind.DefaultValue;
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

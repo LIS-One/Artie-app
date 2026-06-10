@@ -1,6 +1,5 @@
 package com.arty.roadmapservice.config;
 
-import com.arty.roadmapservice.dto.response.milestone.MilestoneResponseDto;
 import com.arty.roadmapservice.dto.response.roadmap.RoadmapResponseDto;
 import com.arty.roadmapservice.entity.Milestone;
 import com.arty.roadmapservice.entity.Roadmap;
