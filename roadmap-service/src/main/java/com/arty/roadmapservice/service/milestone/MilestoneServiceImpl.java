@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -58,6 +59,15 @@ public class MilestoneServiceImpl implements MilestoneService{
         Optional<Milestone> milestone = milestoneRepository.findById(id);
         milestone.ifPresent(milestoneRepository::delete);
         return !milestoneRepository.existsById(id);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<MilestoneResponseDto> getMilestonesInRoadmap(Long id) {
+        return milestoneRepository.getMilestonesByRoadmap_Id(id)
+                .stream()
+                .map(this::toDto)
+                .toList();
     }
 
     @Transactional

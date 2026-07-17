@@ -17,6 +17,6 @@ public class RoadmapResponseDto {
     private LocalDateTime creationDate;
     private LocalDateTime expirationDate;
     private List<Long> milestoneListId;
-    private UserResponseDto userProfile;
+    private Long userProfileId;
     private RoadMilestoneStatus status;
 }

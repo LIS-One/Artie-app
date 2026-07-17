@@ -8,6 +8,8 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -26,5 +28,7 @@ public class UserProfile {
 //    private String password;
     private LocalDate birthDate;
     @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL)
-    private List<Roadmap> roadmaps;
+    private List<Roadmap> roadmaps = new ArrayList<>();
+    private Integer streak;
+    private LocalDate lastLogDate;
 }

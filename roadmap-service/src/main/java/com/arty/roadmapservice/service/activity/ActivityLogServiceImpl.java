@@ -2,6 +2,7 @@ package com.arty.roadmapservice.service.activity;
 
 
 import com.arty.roadmapservice.dto.constants.enums.LogMode;
+import com.arty.roadmapservice.dto.constants.enums.LogStatus;
 import com.arty.roadmapservice.dto.request.activity.ActivityCreateDto;
 import com.arty.roadmapservice.dto.request.activity.ActivityTimedCreateDto;
 import com.arty.roadmapservice.dto.request.activity.ActivityUpdateDto;
@@ -9,19 +10,27 @@ import com.arty.roadmapservice.dto.response.activity.ActivityResponseDto;
 import com.arty.roadmapservice.entity.ActivityLog;
 import com.arty.roadmapservice.entity.Milestone;
 import com.arty.roadmapservice.entity.Roadmap;
+import com.arty.roadmapservice.entity.UserProfile;
 import com.arty.roadmapservice.exceptions.IllegalLogUpdateException;
 import com.arty.roadmapservice.repository.ActivityLogRepository;
 import com.arty.roadmapservice.repository.MilestoneRepository;
 import com.arty.roadmapservice.repository.RoadmapRepository;
+import com.arty.roadmapservice.service.user.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static com.arty.roadmapservice.dto.constants.enums.LogMode.MANUAL;
 import static com.arty.roadmapservice.dto.constants.enums.LogMode.TIMED;
 
 @Service
@@ -31,6 +40,7 @@ public class ActivityLogServiceImpl implements ActivityLogService {
     private final ModelMapper modelMapper;
     private final RoadmapRepository roadmapRepository;
     private final MilestoneRepository milestoneRepository;
+    private final UserService userService;
 
     @Transactional
     @Override
@@ -60,27 +70,45 @@ public class ActivityLogServiceImpl implements ActivityLogService {
 
     @Transactional
     @Override
-    public ActivityResponseDto updateActivityLog(Long id, ActivityUpdateDto activityUpdateDto) {
-        Optional<ActivityLog> activityLog = activityLogRepository.findById(id);
-        if (activityLog.isPresent()) {
-            if (activityLog.get().getLogMode() == TIMED) {
+    public ActivityResponseDto updateActivityLog(Long id, ActivityUpdateDto activityUpdateDto, String email) throws AccessDeniedException {
+        ActivityLog activityLog = activityLogRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        if (!activityLog.getRoadmap().getUserProfile().getEmail().equals(email)) {
+            throw new AccessDeniedException("Not your log");
+        }
+            if (activityLog.getLogMode() == TIMED) {
                 if (activityUpdateDto.getCreated() != null || activityUpdateDto.getEnded() != null) {
                     throw new IllegalLogUpdateException(
                             "Timestamps of TIMED logs are immutable"
                     );
                 }
+                if (activityUpdateDto.getName()!=null){
+                    activityLog.setName(activityUpdateDto.getName());
 
-                activityLog.get().setName(activityUpdateDto.getName());
-                activityLog.get().setUpdated(activityUpdateDto.getUpdated());
-                activityLogRepository.save(activityLog.get());
-                return toDto(activityLog.get());
-            }
-        }
-        return activityLog.map(a -> {
-            modelMapper.map(activityUpdateDto, a);
-            activityLogRepository.save(a);
-            return toDto(a);
-        }).orElse(null);
+                }
+            } else if (activityLog.getLogMode() == MANUAL) {
+
+                }
+                if(activityUpdateDto.getName()!=null)
+                    activityLog.setName(activityUpdateDto.getName());
+                LocalDateTime created = activityUpdateDto.getCreated()!=null?activityUpdateDto.getCreated():activityLog.getCreated();
+                if (activityUpdateDto.getEnded() != null && ChronoUnit.MINUTES.between(created, activityUpdateDto.getEnded()) > 720) {
+                    throw new IllegalLogUpdateException("Log cannot be over 12 hours");
+                }
+                if (activityUpdateDto.getCreated() != null) {
+                    activityLog.setCreated(activityUpdateDto.getCreated());
+                }
+                if (activityUpdateDto.getEnded() != null) {
+
+                    activityLog.setEnded(activityUpdateDto.getEnded());
+                    activityLog.setLogStatus(LogStatus.COMPLETED);
+                    LocalDate ended = activityLog.getEnded().toLocalDate();
+
+                    updateStreak(activityLog.getRoadmap().getUserProfile(), ended);
+
+
+                }
+        activityLogRepository.save(activityLog);
+        return toDto(activityLog);
     }
 
     @Transactional
@@ -114,16 +142,63 @@ public class ActivityLogServiceImpl implements ActivityLogService {
 
     @Transactional
     @Override
-    public ActivityResponseDto stopActivityLog(Long id) {
-        Optional<ActivityLog> activityLog = activityLogRepository.findById(id);
-        if (activityLog.isPresent()) {
-            if (activityLog.get().getLogMode() == TIMED) {
-                activityLog.get().setEnded(LocalDateTime.now());
-                activityLogRepository.save(activityLog.get());
-                return toDto(activityLog.get());
+    public ActivityResponseDto stopActivityLog(Long id, String email) throws AccessDeniedException {
+
+        ActivityLog activityLog = activityLogRepository.findById(id).orElseThrow(NoSuchElementException::new);
+
+            if (!activityLog.getRoadmap().getUserProfile().getEmail().equals(email))
+                throw new AccessDeniedException("Not your log");
+            if (activityLog.getLogMode() == TIMED) {
+                if(activityLog.getLogStatus().equals(LogStatus.COMPLETED))
+                    throw new IllegalLogUpdateException("Log is already completed");
+                activityLog.setEnded(LocalDateTime.now());
+                activityLog.setLogStatus(LogStatus.COMPLETED);
+                LocalDate ended = activityLog.getEnded().toLocalDate();
+                updateStreak(activityLog.getRoadmap().getUserProfile(),ended);
+                activityLogRepository.save(activityLog);
+                return toDto(activityLog);
             }
-        }
-        throw new EntityNotFoundException("ActivityLog with id " + id + " not found");
+            throw new EntityNotFoundException("ActivityLog with id " + id + " not found");
+
+    }
+
+    private void updateStreak(UserProfile user,  LocalDate ended) {
+        LocalDate now = LocalDate.now();
+        LocalDate lastLog = user.getLastLogDate();
+        int streak = user.getStreak();
+            if (ended.equals(now)) {
+                if(now.equals(lastLog)) {
+
+                }else if(now.minusDays(1).equals(lastLog)) {
+                    user.setStreak(streak + 1);
+                }else{
+                    user.setStreak(1);
+                }
+                user.setLastLogDate(now);
+            }
+
+
+    }
+
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ActivityResponseDto> getActivitiesInRoadmap(Long roadmapId) {
+        return activityLogRepository.findByRoadmap_Id(roadmapId)
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ActivityResponseDto> getRecentUserActivities(String email) {
+
+        LocalDateTime after = LocalDate.now().minusDays(60).atStartOfDay();
+        return activityLogRepository.findByRoadmap_UserProfile_EmailAndCreatedAfter(email, after)
+                .stream()
+                .map(this::toDto)
+                .toList();
     }
 
     private ActivityResponseDto toDto(ActivityLog a) {

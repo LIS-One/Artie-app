@@ -12,5 +12,5 @@ public class RoadmapCreateDto {
     private String name;
     private String description;
     private LocalDateTime expirationDate;
-    private Long userId;
+    private String  email;
 }
