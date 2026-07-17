@@ -26,6 +26,8 @@
         <module>roadmap-service</module>
         <module>auth-service</module>
         <module>eureka</module>
+        <module>security-commons</module>
+        <module>analyze-service</module>
     </modules>
 
     <!-- Общие свойства, доступные во всех дочерних pom через ${имя}. -->
