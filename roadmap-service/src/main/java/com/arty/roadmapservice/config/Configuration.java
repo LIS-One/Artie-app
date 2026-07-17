@@ -14,16 +14,6 @@ public class Configuration {
     @Bean
     ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
-        modelMapper.createTypeMap(Roadmap.class, RoadmapResponseDto.class)
-                .addMappings(mapper -> mapper.map(
-                        src -> {
-                            if (src.getMilestones() == null) return java.util.List.<Long>of();
-                            return src.getMilestones().stream().map(Milestone::getId).toList();
-                        },
-                        RoadmapResponseDto::setMilestoneListId
-                ));
-
-
         modelMapper.getConfiguration()
                 .setFieldMatchingEnabled(true)
                 .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE)
