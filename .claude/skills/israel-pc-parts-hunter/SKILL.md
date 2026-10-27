@@ -30,6 +30,8 @@ Goal: a compatible build in which every part has a working link to an Israeli sh
 - Write queries **in Hebrew** plus the exact model name: `כרטיס מסך RTX 5070 מחיר`, `לוח אם B650 מחיר`, `זיכרון DDR5 32GB 6000 CL30 מחיר`, `ספק כוח 750W Gold`, `מארז מחשב`, `קירור מעבד`, `כונן SSD NVMe 2TB`.
 - For each category: first a broad query (to see prices across the market), then a targeted one on the chosen model (for the product link and the "from" price on Zap).
 - Run independent searches in parallel, in a single turn.
+- Do not write the shop name "באג" (Bug) in a query: the search reads it as "bug". Filter by domain with `allowed_domains: ["bug.co.il"]` instead.
+- Snapshots of the same product often disagree (a category page vs the model page). Trust the model/product page (`model.aspx?modelid=`, `catalog.php?id=`), and treat a suspiciously low price (several times below the market) as a stale snapshot or a price error: mention it separately, do not put it in the total.
 
 ## 4. Price traps (always check)
 - **"המחירים בתוקף עד DD/MM/YYYY"** on Ivory/TMS: if the date has already passed, the price is out of date. Mark it or pick another source.
